@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="zh-MY">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>2026模范生评估表 - PN. NG PEI PEI</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root {
+    --base-font: 20px;
+    --bg-page: #F6F5F0;
+    --bg-card: #FFFFFF;
+    --text-main: #1E293B;
+    --text-sub: #475569;
+    --navy: #1E3A8A;
+    --border-soft: #CBD5E1;
+    --border-dark: #334155;
+    --edit-bg: #FEF9C3;
+    --edit-border: #CA8A04;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+    font-size: var(--base-font);
+    line-height: 1.55;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    margin: 0;
+    padding: 12px;
+  }
+
+  .top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    max-width: 1220px;
+    margin: 0 auto 14px auto;
+    background: #1E293B;
+    color: #FFFFFF;
+    padding: 10px 16px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .font-controls { display: flex; align-items: center; gap: 8px; }
+
+  .size-btn {
+    font-size: 0.9em;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid #94A3B8;
+    background: #334155;
+    color: #FFFFFF;
+    cursor: pointer;
+    min-height: 40px;
+  }
+
+  .size-btn.active { background: #FACC15; color: #0F172A; border-color: #FACC15; }
+
+  .jump-btn {
+    font-size: 0.9em;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 6px;
+    background: #FEF08A;
+    color: #713F12;
+    border: none;
+    cursor: pointer;
+    min-height: 40px;
+  }
+
+  .container {
+    max-width: 1220px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    padding: 24px;
+    border-radius: 14px;
+    border: 2px solid var(--border-soft);
+  }
+
+  .doc-header {
+    text-align: center;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    border-bottom: 2px solid var(--border-soft);
+  }
+
+  .doc-header h1 { font-size: 1.3em; margin: 0 0 4px 0; color: #0F172A; }
+  .doc-header h2 { font-size: 1.12em; margin: 0 0 10px 0; color: var(--navy); font-weight: 800; }
+
+  .evaluator-badge {
+    display: inline-block;
+    background: #DBEAFE;
+    color: #1E3A8A;
+    border: 2px solid #1E3A8A;
+    padding: 6px 20px;
+    border-radius: 8px;
+    font-weight: 900;
+    font-size: 1em;
+  }
+
+  .mobile-tabs {
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 16px;
+    background: #F1F5F9;
+    padding: 6px;
+    border-radius: 8px;
+  }
+
+  .tab-btn {
+    font-size: 0.9em;
+    font-weight: 800;
+    padding: 8px 4px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-sub);
+    cursor: pointer;
+  }
+
+  .tab-btn.active { background: var(--navy); color: #FFFFFF; }
+
+  .section-title {
+    font-size: 1.05em;
+    font-weight: 800;
+    color: var(--navy);
+    background: #EFF6FF;
+    padding: 8px 14px;
+    border-left: 5px solid var(--navy);
+    border-radius: 4px;
+    margin: 20px 0 10px 0;
+  }
+
+  table.clean-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+  table.clean-table th, table.clean-table td {
+    border: 1px solid var(--border-soft);
+    padding: 10px 14px;
+    vertical-align: top;
+    text-align: left;
+  }
+  table.clean-table thead th {
+    background: #1E293B;
+    color: #FFFFFF;
+    text-align: center;
+    font-weight: 800;
+    padding: 12px;
+  }
+
+  .zh-title { font-size: 1.15em; color: #FEF08A; display: block; }
+  .en-title { font-size: 0.82em; opacity: 0.9; }
+
+  td.row-label {
+    width: 19%;
+    background: #F8FAFC;
+    font-weight: 800;
+    color: #0F172A;
+    vertical-align: middle;
+  }
+
+  td.cand-cell { width: 27%; background: #FFFFFF; }
+  .academic-table td.cand-cell { text-align: center; vertical-align: middle; font-weight: 700; }
+
+  tr.summary-row td {
+    background: #F1F5F9 !important;
+    font-weight: 800;
+    border-top: 2px solid var(--border-dark);
+    border-bottom: 2px solid var(--border-dark);
+  }
+
+  .badge {
+    display: inline-block;
+    min-width: 92px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-weight: 800;
+    text-align: center;
+  }
+  .b-A { background: #DCFCE7; color: #14532D; }
+  .b-B { background: #DBEAFE; color: #1E3A8A; }
+  .b-C { background: #FEF3C7; color: #92400E; }
+  .b-D { background: #FEE2E2; color: #991B1B; }
+
+  .ach-group { margin-bottom: 8px; }
+  .ach-group:last-child { margin-bottom: 0; }
+  .ach-tag { font-weight: 800; color: var(--navy); }
+
+  .eval-footer-box {
+    margin-top: 22px;
+    background: #FFFBEB;
+    border: 3px solid var(--edit-border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .eval-footer-header { text-align: center; margin-bottom: 12px; }
+  .eval-footer-header h3 { margin: 0 0 4px 0; font-size: 1.22em; color: #713F12; }
+  .eval-footer-header p { margin: 0; font-size: 0.9em; color: #92400E; font-weight: 700; }
+
+  .kpi-card {
+    background: #FFFFFF;
+    border: 2px solid #F59E0B;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.88em;
+  }
+
+  .kpi-head {
+    font-weight: 900;
+    color: #92400E;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .kpi-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    font-weight: 700;
+    color: #1E293B;
+    text-align: center;
+  }
+
+  .kpi-scale {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed var(--border-soft);
+    text-align: center;
+    font-weight: 800;
+    color: #334155;
+  }
+
+  .eval-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .eval-input-card {
+    background: #FFFFFF;
+    border: 2px solid var(--border-dark);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .eval-input-card.missing-error {
+    border: 3px solid #DC2626;
+    background: #FEF2F2;
+  }
+
+  .eval-student-name { font-size: 1.22em; font-weight: 900; color: #0F172A; }
+  .eval-student-en { font-size: 0.8em; color: var(--text-sub); font-weight: 700; margin-bottom: 8px; }
+
+  .score-input-field {
+    width: 100%;
+    height: 56px;
+    font-size: 1.5em;
+    font-weight: 900;
+    text-align: center;
+    color: #0F172A;
+    background: var(--edit-bg);
+    border: 3px solid var(--edit-border);
+    border-radius: 10px;
+    padding: 4px;
+  }
+
+  .score-input-field:focus { outline: 4px solid #2563EB; background: #FFFFFF; }
+
+  .breakdown-box {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border-soft);
+    font-size: 0.86em;
+    color: var(--text-sub);
+    text-align: left;
+  }
+
+  .bd-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+
+  .bd-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 2px solid var(--border-soft);
+    font-weight: 900;
+    font-size: 1.1em;
+    color: var(--navy);
+  }
+
+  .evaluator-sign-row {
+    text-align: right;
+    font-weight: 800;
+    color: #1E293B;
+    margin-bottom: 14px;
+    font-size: 0.92em;
+  }
+
+  .export-btn-wrap { text-align: center; }
+
+  .export-pdf-btn {
+    width: 100%;
+    max-width: 520px;
+    min-height: 58px;
+    font-size: 1.12em;
+    font-weight: 900;
+    color: #FFFFFF;
+    background: #15803D;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(21, 128, 61, 0.3);
+  }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .modal-box {
+    background: #FFFFFF;
+    max-width: 460px;
+    width: 100%;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    border: 4px solid #DC2626;
+  }
+
+  .modal-box h4 { margin: 0 0 10px 0; font-size: 1.3em; color: #991B1B; }
+  .modal-box p { margin: 0 0 18px 0; font-size: 1em; color: #1E293B; font-weight: 600; }
+
+  .modal-close-btn {
+    width: 100%;
+    min-height: 50px;
+    font-size: 1.05em;
+    font-weight: 800;
+    background: #DC2626;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  @media screen and (max-width: 900px) {
+    body { padding: 8px; }
+    .container { padding: 14px; }
+    .mobile-tabs { display: grid; }
+    .kpi-list { grid-template-columns: 1fr 1fr; }
+    .eval-cards-grid { grid-template-columns: 1fr; }
+
+    table.clean-table thead { display: none; }
+    table.clean-table, table.clean-table tbody, table.clean-table tr, table.clean-table td {
+      display: block;
+      width: 100% !important;
+    }
+
+    table.clean-table tr {
+      margin-bottom: 12px;
+      border: 2px solid var(--border-soft);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    table.clean-table td.row-label {
+      background: #1E293B !important;
+      color: #FFFFFF !important;
+      padding: 8px 12px;
+      border: none;
+    }
+
+    table.clean-table td.cand-cell {
+      text-align: left !important;
+      border: none;
+      border-top: 1px solid var(--border-soft);
+      padding: 10px 12px;
+    }
+
+    table.clean-table td.cand-cell::before {
+      content: attr(data-name);
+      display: inline-block;
+      font-weight: 900;
+      color: var(--navy);
+      min-width: 95px;
+      margin-right: 6px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="font-controls">
+    <span><strong>👁️ 字号：</strong></span>
+    <button class="size-btn" onclick="setSize('18px', this)">标准</button>
+    <button class="size-btn active" onclick="setSize('20px', this)">大字</button>
+    <button class="size-btn" onclick="setSize('24px', this)">特大</button>
+  </div>
+  <button class="jump-btn" onclick="document.getElementById('scoring-section').scrollIntoView({behavior:'smooth'})">
+    ⬇️ 跳至底部评分栏
+  </button>
+</div>
+
+<div class="container">
+
+  <!-- 表头 -->
+  <div class="doc-header">
+    <h1>武吉港脚南华国民型华文小学 SJK(C) NAN HWA</h1>
+    <h2>2026年度六年级模范生遴选评估表（总分 100% 制）</h2>
+    <div class="evaluator-badge">评审老师：PN. NG PEI PEI</div>
+  </div>
+
+  <!-- 手机端候选人切换 -->
+  <div class="mobile-tabs">
+    <button class="tab-btn active" onclick="filterView('all', this)">全部对比</button>
+    <button class="tab-btn" onclick="filterView('c1', this)">颜妤欣</button>
+    <button class="tab-btn" onclick="filterView('c2', this)">颜煌星</button>
+    <button class="tab-btn" onclick="filterView('c3', this)">洪婕宁</button>
+  </div>
+
+  <!-- 一、 校内服务职务（全部不加粗） -->
+  <div class="section-title">一、 校内服务与领导职务</div>
+  <table class="clean-table">
+    <thead>
+      <tr>
+        <th>项目</th>
+        <th class="c-col c1"><span class="zh-title">颜妤欣</span><span class="en-title">GAN YU XIN</span></th>
+        <th class="c-col c2"><span class="zh-title">颜煌星</span><span class="en-title">GAN ONG SIN</span></th>
+        <th class="c-col c3"><span class="zh-title">洪婕宁</span><span class="en-title">JENNY ANG</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="row-label">服务职务与代表</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣：">• 东甲县小学学生领袖团思维营代表</td>
+        <td class="cand-cell c-col c2" data-name="颜煌星：">• 学生领袖团成员<br>• 图书馆管理员</td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁：">• 图书馆管理员<br>• 东甲县学联田径队校代表</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 二、 联课与课外活动表现（占总分 30%） -->
+  <div class="section-title">二、 联课与课外活动表现（占综合总分 30%）</div>
+  <table class="clean-table">
+    <thead>
+      <tr>
+        <th>类别</th>
+        <th class="c-col c1"><span class="zh-title">颜妤欣</span><span class="en-title">GAN YU XIN</span></th>
+        <th class="c-col c2"><span class="zh-title">颜煌星</span><span class="en-title">GAN ONG SIN</span></th>
+        <th class="c-col c3"><span class="zh-title">洪婕宁</span><span class="en-title">JENNY ANG</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="row-label">校内比赛<br><small style="font-weight:normal; color:#475569;">(冠5 / 亚4 / 季3 / 殿2 / 参与1)</small></td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣：">
+          <div class="ach-group"><span class="ach-tag">冠军 (6项，各5分)：</span>华语诗歌朗诵、英语演讲、英语诗歌朗诵、国语演讲、国语诗歌朗诵、运动会 4×100米接力赛</div>
+          <div class="ach-group"><span class="ach-tag">亚军 (4项，各4分)：</span>华语演讲、三人篮球赛、科学思维导图比赛、英语拼字比赛 (Spelling Bee)</div>
+          <div class="ach-group"><span class="ach-tag">季军 (1项，3分)：</span>国语作文比赛</div>
+        </td>
+        <td class="cand-cell c-col c2" data-name="颜煌星：">
+          <div class="ach-group"><span class="ach-tag">亚军 (1项，4分)：</span>校内跳绳比赛 (6M组)</div>
+          <div class="ach-group"><span class="ach-tag">第五名 (1项，1分)：</span>校内越野赛跑 (五六年级男子组)</div>
+          <div class="ach-group"><span class="ach-tag">参与 (9项，各1分)：</span>国语演讲、英语演讲、华语演讲、华语诗歌朗诵、国语作文、运动会 100米、200米、4×100米接力赛、跳远</div>
+        </td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁：">
+          <div class="ach-group"><span class="ach-tag">冠军 (1项，5分)：</span>运动会 4×100米接力赛</div>
+          <div class="ach-group"><span class="ach-tag">亚军 (2项，各4分)：</span>运动会 100米赛跑、200米赛跑</div>
+          <div class="ach-group"><span class="ach-tag">季军 (1项，3分)：</span>运动会 跳远比赛</div>
+          <div class="ach-group"><span class="ach-tag">参与 (3项，各1分)：</span>运动会 标枪、铅球、国语作文比赛</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="row-label">校外比赛<br><small style="font-weight:normal; color:#475569;">(冠10 / 亚8 / 季6 / 优秀4 / 参与2)</small></td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣：">
+          <div class="ach-group"><span class="ach-tag">区赛冠军 & 县赛优秀奖 (14分)：</span>东甲县华文嘉年华散文创作赛（实廊区冠军10分 + 县赛优秀奖4分）</div>
+          <div class="ach-group"><span class="ach-tag">亚军 (2项，各8分)：</span>东甲县永续发展电子海报设计赛、校外跆拳道锦标赛</div>
+          <div class="ach-group"><span class="ach-tag">得奖 (3期，各4分)：</span>《星洲日报》“看报纸·填时事”有奖游戏（第1、2、3期）</div>
+          <div class="ach-group"><span class="ach-tag">参与 (10项，各2分)：</span>东甲县英语演讲、国语演讲、学联篮球赛 (MSSD)、学生领袖团思维营、《星洲日报》时事问答赛、团结嘉年华语文赛、IMELC 创意书信赛（英文组）、IMELC 创意书信赛（国文组）、国家意识讲座大马纪录大全活动、华文散文创作工作坊</div>
+        </td>
+        <td class="cand-cell c-col c2" data-name="颜煌星：">
+          <div class="ach-group"><span class="ach-tag">校外代表与参与 (6项，各2分)：</span><br>
+            1. 第58届东甲县学联田径锦标赛 (MSSD 男子12岁组代表)<br>
+            2. 全国工业4.0教育无人机挑战赛 (DEC4IR)<br>
+            3. 依斯干达特区 IMELC 网站低碳挑战赛<br>
+            4. 依斯干达特区 IMELC 创意书信比赛（组别一）<br>
+            5. 依斯干达特区 IMELC 创意书信比赛（组别二）<br>
+            6. 东甲县永续发展电子海报设计赛
+          </div>
+        </td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁：">
+          <div class="ach-group"><span class="ach-tag">校外代表与参与 (4项，各2分)：</span><br>
+            1. 第58届东甲县学联田径锦标赛 (MSSD 代表)<br>
+            2. 《星洲日报》全国小学生时事问答比赛<br>
+            3. 依斯干达特区 IMELC 创意书信比赛<br>
+            4. 东甲县永续发展电子海报设计赛
+          </div>
+        </td>
+      </tr>
+      <tr class="summary-row">
+        <td class="row-label">联课积分与 30% 折算</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣：">原始分：111 分 (49+62) ｜ <strong>折算 (30%)：30.00%</strong></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星：">原始分：26 分 (14+12) ｜ <strong>折算 (30%)：7.80%</strong></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁：">原始分：27 分 (19+8) ｜ <strong>折算 (30%)：8.10%</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 三、 2026年终学术成绩（占总分 50%） -->
+  <div class="section-title">三、 2026年终学术成绩（占综合总分 50%）</div>
+  <table class="clean-table academic-table">
+    <thead>
+      <tr>
+        <th>科目</th>
+        <th class="c-col c1"><span class="zh-title">颜妤欣</span><span class="en-title">GAN YU XIN</span></th>
+        <th class="c-col c2"><span class="zh-title">颜煌星</span><span class="en-title">GAN ONG SIN</span></th>
+        <th class="c-col c3"><span class="zh-title">洪婕宁</span><span class="en-title">JENNY ANG</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="row-label">国文</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><span class="badge b-A">90% (A)</span></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><span class="badge b-B">80% (B)</span></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><span class="badge b-A">84% (A)</span></td>
+      </tr>
+      <tr>
+        <td class="row-label">英文</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><span class="badge b-A">87% (A)</span></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><span class="badge b-A">82% (A)</span></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><span class="badge b-B">68% (B)</span></td>
+      </tr>
+      <tr>
+        <td class="row-label">数学</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><span class="badge b-B">74% (B)</span></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><span class="badge b-A">98% (A)</span></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><span class="badge b-A">82% (A)</span></td>
+      </tr>
+      <tr>
+        <td class="row-label">华文</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><span class="badge b-A">86% (A)</span></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><span class="badge b-B">72% (B)</span></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><span class="badge b-B">76% (B)</span></td>
+      </tr>
+      <tr>
+        <td class="row-label">科学</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><span class="badge b-B">76% (B)</span></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><span class="badge b-B">76% (B)</span></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><span class="badge b-C">64% (C)</span></td>
+      </tr>
+      <tr>
+        <td class="row-label">历史</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><span class="badge b-A">82% (A)</span></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><span class="badge b-A">82% (A)</span></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><span class="badge b-A">84% (A)</span></td>
+      </tr>
+      <tr>
+        <td class="row-label">道德教育</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><span class="badge b-A">100% (A)</span></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><span class="badge b-A">96% (A)</span></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><span class="badge b-A">100% (A)</span></td>
+      </tr>
+      <tr>
+        <td class="row-label">美术</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><span class="badge b-B">68% (B)</span></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><span class="badge b-C">64% (C)</span></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><span class="badge b-B">78% (B)</span></td>
+      </tr>
+      <tr>
+        <td class="row-label">音乐</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><span class="badge b-A">89% (A)</span></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><span class="badge b-B">78% (B)</span></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><span class="badge b-B">80% (B)</span></td>
+      </tr>
+      <tr>
+        <td class="row-label">体育与健康</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><span class="badge b-D">49% (D)</span></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><span class="badge b-C">50% (C)</span></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><span class="badge b-B">66% (B)</span></td>
+      </tr>
+      <tr>
+        <td class="row-label">设计与工艺</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><span class="badge b-A">90% (A)</span></td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><span class="badge b-B">69% (B)</span></td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><span class="badge b-B">72% (B)</span></td>
+      </tr>
+      <tr class="summary-row">
+        <td class="row-label">11科总分 (平均)</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣：">891 / 1100 （平均 81.00%）｜ 7A, 3B, 1D</td>
+        <td class="cand-cell c-col c2" data-name="颜煌星：">847 / 1100 （平均 77.00%）｜ 4A, 5B, 2C</td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁：">854 / 1100 （平均 77.64%）｜ 4A, 6B, 1C</td>
+      </tr>
+      <tr class="summary-row">
+        <td class="row-label">学术 50% 折算得分</td>
+        <td class="cand-cell c-col c1" data-name="颜妤欣："><strong>40.50%</strong> （81.00 × 50%）</td>
+        <td class="cand-cell c-col c2" data-name="颜煌星："><strong>38.50%</strong> （77.00 × 50%）</td>
+        <td class="cand-cell c-col c3" data-name="洪婕宁："><strong>38.82%</strong> （77.64 × 50%）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 四、 品德与操守评定（占总分 20%，满分 20 分） -->
+  <div class="eval-footer-box" id="scoring-section">
+    <div class="eval-footer-header">
+      <h3>四、 品德与操守评定（占综合总分 20%）</h3>
+      <p>请为以下三位候选学生评分（输入 0 – 20 分，三位皆须填写方可导出 PDF）</p>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-head">品德与操守五大评估指标（满分 20 分 / 20%，每项指标各占 4 分）</div>
+      <div class="kpi-list">
+        <div>1. 尊师重道与礼貌 (4分)</div>
+        <div>2. 自律守规与态度 (4分)</div>
+        <div>3. 合群友爱与团队 (4分)</div>
+        <div>4. 责任感与诚信 (4分)</div>
+        <div>5. 服务热忱与表率 (4分)</div>
+      </div>
+      <div class="kpi-scale">
+        给分参考： 18–20分【楷模】 ｜ 16–17.5分【优秀】 ｜ 14–15.5分【良好】 ｜ 0–13.5分【有待改进】
+      </div>
+    </div>
+
+    <div class="eval-cards-grid">
+      <!-- 颜妤欣 -->
+      <div class="eval-input-card" id="card-c1">
+        <div class="eval-student-name">颜妤欣</div>
+        <div class="eval-student-en">GAN YU XIN</div>
+        <input type="number" id="input-c1" inputmode="decimal" step="0.5" min="0" max="20"
+               class="score-input-field" placeholder="输入 0 - 20" oninput="handleScoreInput()">
+        <div class="breakdown-box">
+          <div class="bd-row"><span>学术表现 (50%)：</span><span>40.50%</span></div>
+          <div class="bd-row"><span>联课表现 (30%)：</span><span>30.00%</span></div>
+          <div class="bd-row"><span>品德操守 (20%)：</span><span id="sahsiah-c1">0.00%</span></div>
+          <div class="bd-total"><span>综合总分 (100%)：</span><span id="sum-c1">70.50%</span></div>
+        </div>
+      </div>
+
+      <!-- 颜煌星 -->
+      <div class="eval-input-card" id="card-c2">
+        <div class="eval-student-name">颜煌星</div>
+        <div class="eval-student-en">GAN ONG SIN</div>
+        <input type="number" id="input-c2" inputmode="decimal" step="0.5" min="0" max="20"
+               class="score-input-field" placeholder="输入 0 - 20" oninput="handleScoreInput()">
+        <div class="breakdown-box">
+          <div class="bd-row"><span>学术表现 (50%)：</span><span>38.50%</span></div>
+          <div class="bd-row"><span>联课表现 (30%)：</span><span>7.80%</span></div>
+          <div class="bd-row"><span>品德操守 (20%)：</span><span id="sahsiah-c2">0.00%</span></div>
+          <div class="bd-total"><span>综合总分 (100%)：</span><span id="sum-c2">46.30%</span></div>
+        </div>
+      </div>
+
+      <!-- 洪婕宁 -->
+      <div class="eval-input-card" id="card-c3">
+        <div class="eval-student-name">洪婕宁</div>
+        <div class="eval-student-en">JENNY ANG</div>
+        <input type="number" id="input-c3" inputmode="decimal" step="0.5" min="0" max="20"
+               class="score-input-field" placeholder="输入 0 - 20" oninput="handleScoreInput()">
+        <div class="breakdown-box">
+          <div class="bd-row"><span>学术表现 (50%)：</span><span>38.82%</span></div>
+          <div class="bd-row"><span>联课表现 (30%)：</span><span>8.10%</span></div>
+          <div class="bd-row"><span>品德操守 (20%)：</span><span id="sahsiah-c3">0.00%</span></div>
+          <div class="bd-total"><span>综合总分 (100%)：</span><span id="sum-c3">46.92%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evaluator-sign-row">
+      评审老师：PN. NG PEI PEI ｜ 日期：06/11/2026
+    </div>
+
+    <div class="export-btn-wrap">
+      <button class="export-pdf-btn" id="download-btn" onclick="validateAndDownloadPDF()">
+        📥 导出并自动下载 PDF (Export as PDF)
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- 漏填提醒弹窗 -->
+<div class="modal-overlay" id="warning-modal">
+  <div class="modal-box">
+    <h4>⚠️ 评分尚未完成或超出范围</h4>
+    <p id="modal-msg">请先填妥全部三位候选学生的【品德与操守】分数（0 – 20分），方可下载 PDF。</p>
+    <button class="modal-close-btn" onclick="closeModalAndFocus()">好的，立即去填写</button>
+  </div>
+</div>
+
+<script>
+  const EVALUATOR_DISPLAY = "PN. NG PEI PEI";
+  const EVALUATOR_FILE_ID = "PN_NG_PEI_PEI";
+  let firstEmptyInputId = null;
+
+  function setSize(size, btn) {
+    document.documentElement.style.setProperty('--base-font', size);
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function filterView(target, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.c-col').forEach(el => {
+      el.style.display = (target === 'all' || el.classList.contains(target)) ? '' : 'none';
+    });
+  }
+
+  function handleScoreInput() {
+    const raw1 = document.getElementById('input-c1').value.trim();
+    const raw2 = document.getElementById('input-c2').value.trim();
+    const raw3 = document.getElementById('input-c3').value.trim();
+
+    const v1 = parseFloat(raw1);
+    const v2 = parseFloat(raw2);
+    const v3 = parseFloat(raw3);
+
+    if (raw1 !== '' && !isNaN(v1) && v1 >= 0 && v1 <= 20) document.getElementById('card-c1').classList.remove('missing-error');
+    if (raw2 !== '' && !isNaN(v2) && v2 >= 0 && v2 <= 20) document.getElementById('card-c2').classList.remove('missing-error');
+    if (raw3 !== '' && !isNaN(v3) && v3 >= 0 && v3 <= 20) document.getElementById('card-c3').classList.remove('missing-error');
+
+    const s1 = (!isNaN(v1) && v1 >= 0 && v1 <= 20) ? v1 : 0;
+    const s2 = (!isNaN(v2) && v2 >= 0 && v2 <= 20) ? v2 : 0;
+    const s3 = (!isNaN(v3) && v3 >= 0 && v3 <= 20) ? v3 : 0;
+
+    document.getElementById('sahsiah-c1').innerText = s1.toFixed(2) + '%';
+    document.getElementById('sahsiah-c2').innerText = s2.toFixed(2) + '%';
+    document.getElementById('sahsiah-c3').innerText = s3.toFixed(2) + '%';
+
+    document.getElementById('sum-c1').innerText = (40.50 + 30.00 + s1).toFixed(2) + '%';
+    document.getElementById('sum-c2').innerText = (38.50 + 7.80 + s2).toFixed(2) + '%';
+    document.getElementById('sum-c3').innerText = (38.82 + 8.10 + s3).toFixed(2) + '%';
+
+    try {
+      localStorage.setItem(EVALUATOR_FILE_ID + '_c1', raw1);
+      localStorage.setItem(EVALUATOR_FILE_ID + '_c2', raw2);
+      localStorage.setItem(EVALUATOR_FILE_ID + '_c3', raw3);
+    } catch (e) {}
+  }
+
+  function closeModalAndFocus() {
+    document.getElementById('warning-modal').style.display = 'none';
+    if (firstEmptyInputId) {
+      const target = document.getElementById(firstEmptyInputId);
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => target.focus(), 300);
+    }
+  }
+
+  // ==================== 原生 A4 画布直绘引擎（永不空白、严格单页 A4） ====================
+  function wrapLines(ctx, text, maxW) {
+    const paragraphs = text.split('\n');
+    const lines = [];
+    for (const p of paragraphs) {
+      let line = '';
+      for (let i = 0; i < p.length; i++) {
+        const testLine = line + p[i];
+        if (ctx.measureText(testLine).width > maxW && line.length > 0) {
+          lines.push(line);
+          line = p[i];
+        } else {
+          line = testLine;
+        }
+      }
+      lines.push(line);
+    }
+    return lines;
+  }
+
+  function renderA4Canvas(s1, s2, s3) {
+    const canvas = document.createElement('canvas');
+    const W = 1240, H = 1754;
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    const fontBase = '"Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif';
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, W, H);
+
+    const M = 44;
+    const TW = W - M * 2;
+    const colW = [204, 316, 316, 316];
+    const colX = [M, M + 204, M + 520, M + 836];
+
+    ctx.fillStyle = '#0F172A';
+    ctx.font = 'bold 26px ' + fontBase;
+    ctx.textAlign = 'center';
+    ctx.fillText('武吉港脚南华国民型华文小学 SJK(C) NAN HWA', W / 2, 54);
+
+    ctx.fillStyle = '#1E3A8A';
+    ctx.font = 'bold 21px ' + fontBase;
+    ctx.fillText('2026年度六年级模范生遴选评估表（总分 100% 制）', W / 2, 86);
+
+    ctx.fillStyle = '#DBEAFE';
+    ctx.strokeStyle = '#1E3A8A';
+    ctx.lineWidth = 2;
+    ctx.fillRect(W / 2 - 280, 98, 560, 34);
+    ctx.strokeRect(W / 2 - 280, 98, 560, 34);
+    ctx.fillStyle = '#1E3A8A';
+    ctx.font = 'bold 16px ' + fontBase;
+    ctx.fillText('评审老师：' + EVALUATOR_DISPLAY + '   ｜   班级：6M   ｜   日期：06/11/2026', W / 2, 121);
+
+    let y = 146;
+
+    function drawSectionBar(title) {
+      ctx.fillStyle = '#EFF6FF';
+      ctx.fillRect(M, y, TW, 30);
+      ctx.fillStyle = '#1E3A8A';
+      ctx.fillRect(M, y, 6, 30);
+      ctx.font = 'bold 16px ' + fontBase;
+      ctx.textAlign = 'left';
+      ctx.fillText(title, M + 14, y + 21);
+      y += 34;
+    }
+
+    function drawTableHeader(col0Label) {
+      const h = 38;
+      ctx.fillStyle = '#1E293B';
+      ctx.fillRect(M, y, TW, h);
+      ctx.strokeStyle = '#CBD5E1';
+      ctx.lineWidth = 1;
+      const headers = [col0Label, '颜妤欣 GAN YU XIN', '颜煌星 GAN ONG SIN', '洪婕宁 JENNY ANG'];
+      for (let i = 0; i < 4; i++) {
+        ctx.strokeRect(colX[i], y, colW[i], h);
+        ctx.fillStyle = i === 0 ? '#FFFFFF' : '#FEF08A';
+        ctx.font = 'bold 15px ' + fontBase;
+        ctx.textAlign = 'center';
+        ctx.fillText(headers[i], colX[i] + colW[i] / 2, y + 25);
+      }
+      y += h;
+    }
+
+    function drawRow(label, cells, rowH, isSummary) {
+      ctx.fillStyle = isSummary ? '#F1F5F9' : '#F8FAFC';
+      ctx.fillRect(colX[0], y, colW[0], rowH);
+      for (let i = 1; i < 4; i++) {
+        ctx.fillStyle = isSummary ? '#F1F5F9' : '#FFFFFF';
+        ctx.fillRect(colX[i], y, colW[i], rowH);
+      }
+      ctx.strokeStyle = isSummary ? '#334155' : '#CBD5E1';
+      ctx.lineWidth = isSummary ? 1.5 : 1;
+      for (let i = 0; i < 4; i++) {
+        ctx.strokeRect(colX[i], y, colW[i], rowH);
+      }
+
+      ctx.fillStyle = '#0F172A';
+      ctx.font = 'bold 14px ' + fontBase;
+      ctx.textAlign = 'left';
+      const lblLines = wrapLines(ctx, label, colW[0] - 16);
+      lblLines.forEach((ln, idx) => {
+        ctx.fillText(ln, colX[0] + 10, y + 22 + idx * 19);
+      });
+
+      for (let i = 0; i < 3; i++) {
+        ctx.fillStyle = '#1E293B';
+        ctx.font = (isSummary ? 'bold ' : '') + '13.5px ' + fontBase;
+        const cLines = wrapLines(ctx, cells[i], colW[i + 1] - 18);
+        cLines.forEach((ln, idx) => {
+          ctx.fillText(ln, colX[i + 1] + 9, y + 21 + idx * 18.5);
+        });
+      }
+      y += rowH;
+    }
+
+    drawSectionBar('一、 校内服务与领导职务');
+    drawTableHeader('项目');
+    drawRow('服务职务与代表', [
+      '• 东甲县小学学生领袖团思维营代表',
+      '• 学生领袖团成员\n• 图书馆管理员',
+      '• 图书馆管理员\n• 东甲县学联田径队校代表'
+    ], 50, false);
+
+    y += 8;
+
+    drawSectionBar('二、 联课与课外活动表现（占综合总分 30%）');
+    drawTableHeader('类别');
+    drawRow('校内比赛\n(冠5/亚4/季3/殿2/参1)', [
+      '• 冠军 (6项，各5分)：华语诗歌朗诵、英语演讲、英语诗歌朗诵、国语演讲、国语诗歌朗诵、运动会 4×100米接力赛\n• 亚军 (4项，各4分)：华语演讲、三人篮球赛、科学思维导图赛、英语拼字 (Spelling Bee)\n• 季军 (1项，3分)：国语作文比赛',
+      '• 亚军 (1项，4分)：校内跳绳比赛 (6M组)\n• 第五名 (1项，1分)：校内越野赛跑 (五六年级男子组)\n• 参与 (9项，各1分)：国语演讲、英语演讲、华语演讲、华语诗歌朗诵、国语作文、运动会 100米、200米、4×100米接力赛、跳远',
+      '• 冠军 (1项，5分)：运动会 4×100米接力赛\n• 亚军 (2项，各4分)：运动会 100米赛跑、200米赛跑\n• 季军 (1项，3分)：运动会 跳远比赛\n• 参与 (3项，各1分)：运动会 标枪、铅球、国语作文比赛'
+    ], 142, false);
+
+    drawRow('校外比赛\n(冠10/亚8/季6/优4/参2)', [
+      '• 区赛冠军 & 县赛优秀奖 (14分)：东甲县华文嘉年华散文创作赛 (实廊区冠军10分+县优秀4分)\n• 亚军 (2项，各8分)：东甲县永续发展电子海报设计赛、校外跆拳道锦标赛\n• 得奖 (3期，各4分)：《星洲日报》“看报纸·填时事”有奖游戏 (第1、2、3期)\n• 参与 (10项，各2分)：东甲县英语演讲、国语演讲、MSSD篮球赛、领袖团思维营、《星洲》时事问答赛、团结嘉年华语文赛、IMELC创意书信赛(英/国2项)、国家意识讲座大马纪录活动、散文工作坊',
+      '• 校外代表与参与 (6项，各2分)：\n1. 第58届东甲县学联田径赛 (MSSD 男子12岁组代表)\n2. 全国工业4.0教育无人机挑战赛 (DEC4IR)\n3. 依斯干达特区 IMELC 网站低碳挑战赛\n4. 依斯干达特区 IMELC 创意书信比赛 (组别一)\n5. 依斯干达特区 IMELC 创意书信比赛 (组别二)\n6. 东甲县永续发展电子海报设计赛',
+      '• 校外代表与参与 (4项，各2分)：\n1. 第58届东甲县学联田径锦标赛 (MSSD 代表)\n2. 《星洲日报》全国小学生时事问答比赛\n3. 依斯干达特区 IMELC 创意书信比赛\n4. 东甲县永续发展电子海报设计赛'
+    ], 172, false);
+
+    drawRow('联课积分与 30% 折算', [
+      '原始分：111 分 (49+62) ｜ 折算 (30%)：30.00%',
+      '原始分：26 分 (14+12) ｜ 折算 (30%)：7.80%',
+      '原始分：27 分 (19+8) ｜ 折算 (30%)：8.10%'
+    ], 32, true);
+
+    y += 8;
+
+    drawSectionBar('三、 2026年终学术成绩（占综合总分 50%）');
+    drawTableHeader('科目');
+
+    const subjects = [
+      ['国文', '90% (A)', '80% (B)', '84% (A)'],
+      ['英文', '87% (A)', '82% (A)', '68% (B)'],
+      ['数学', '74% (B)', '98% (A)', '82% (A)'],
+      ['华文', '86% (A)', '72% (B)', '76% (B)'],
+      ['科学', '76% (B)', '76% (B)', '64% (C)'],
+      ['历史', '82% (A)', '82% (A)', '84% (A)'],
+      ['道德教育', '100% (A)', '96% (A)', '100% (A)'],
+      ['美术', '68% (B)', '64% (C)', '78% (B)'],
+      ['音乐', '89% (A)', '78% (B)', '80% (B)'],
+      ['体育与健康', '49% (D)', '50% (C)', '66% (B)'],
+      ['设计与工艺', '90% (A)', '69% (B)', '72% (B)']
+    ];
+
+    subjects.forEach(sub => {
+      const rh = 28;
+      ctx.fillStyle = '#F8FAFC';
+      ctx.fillRect(colX[0], y, colW[0], rh);
+      ctx.strokeStyle = '#CBD5E1';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(colX[0], y, colW[0], rh);
+      ctx.fillStyle = '#0F172A';
+      ctx.font = 'bold 13.5px ' + fontBase;
+      ctx.textAlign = 'left';
+      ctx.fillText(sub[0], colX[0] + 10, y + 19);
+
+      for (let i = 1; i <= 3; i++) {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(colX[i], y, colW[i], rh);
+        ctx.strokeRect(colX[i], y, colW[i], rh);
+
+        const val = sub[i];
+        let bg = '#DBEAFE', fg = '#1E3A8A';
+        if (val.includes('(A)')) { bg = '#DCFCE7'; fg = '#14532D'; }
+        else if (val.includes('(C)')) { bg = '#FEF3C7'; fg = '#92400E'; }
+        else if (val.includes('(D)')) { bg = '#FEE2E2'; fg = '#991B1B'; }
+
+        ctx.fillStyle = bg;
+        ctx.fillRect(colX[i] + colW[i] / 2 - 48, y + 4, 96, 20);
+        ctx.fillStyle = fg;
+        ctx.font = 'bold 13px ' + fontBase;
+        ctx.textAlign = 'center';
+        ctx.fillText(val, colX[i] + colW[i] / 2, y + 19);
+      }
+      y += rh;
+    });
+
+    drawRow('11科总分 (平均) / 等级', [
+      '891 / 1100 (81.00%) ｜ 7A, 3B, 1D',
+      '847 / 1100 (77.00%) ｜ 4A, 5B, 2C',
+      '854 / 1100 (77.64%) ｜ 4A, 6B, 1C'
+    ], 30, true);
+
+    drawRow('学术 50% 折算得分', [
+      '40.50% (81.00 × 50%)',
+      '38.50% (77.00 × 50%)',
+      '38.82% (77.64 × 50%)'
+    ], 30, true);
+
+    y += 12;
+
+    const boxH = H - y - 24;
+    ctx.fillStyle = '#FFFBEB';
+    ctx.strokeStyle = '#CA8A04';
+    ctx.lineWidth = 3;
+    ctx.fillRect(M, y, TW, boxH);
+    ctx.strokeRect(M, y, TW, boxH);
+
+    ctx.fillStyle = '#713F12';
+    ctx.font = 'bold 18px ' + fontBase;
+    ctx.textAlign = 'center';
+    ctx.fillText('四、 品德与操守评定（占综合总分 20%，满分 20 分）', W / 2, y + 26);
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.strokeStyle = '#F59E0B';
+    ctx.lineWidth = 1.5;
+    ctx.fillRect(M + 16, y + 36, TW - 32, 52);
+    ctx.strokeRect(M + 16, y + 36, TW - 32, 52);
+
+    ctx.fillStyle = '#1E293B';
+    ctx.font = 'bold 13px ' + fontBase;
+    ctx.fillText('五大评估指标 (各占4分)： 1.尊师重道与礼貌(4分)   2.自律守规与态度(4分)   3.合群友爱与团队(4分)   4.责任感与诚信(4分)   5.服务热忱与表率(4分)', W / 2, y + 56);
+    ctx.fillStyle = '#475569';
+    ctx.fillText('给分参考： 18–20分【楷模】  ｜  16–17.5分【优秀】  ｜  14–15.5分【良好】  ｜  0–13.5分【有待改进】', W / 2, y + 78);
+
+    const cards = [
+      { zh: '颜妤欣', en: 'GAN YU XIN', acad: 40.50, koku: 30.00, sah: s1 },
+      { zh: '颜煌星', en: 'GAN ONG SIN', acad: 38.50, koku: 7.80, sah: s2 },
+      { zh: '洪婕宁', en: 'JENNY ANG', acad: 38.82, koku: 8.10, sah: s3 }
+    ];
+
+    const cW = 352, cH = 190, cY = y + 98;
+    cards.forEach((c, idx) => {
+      const cX = M + 16 + idx * (cW + 32);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.fillRect(cX, cY, cW, cH);
+      ctx.strokeRect(cX, cY, cW, cH);
+
+      ctx.fillStyle = '#0F172A';
+      ctx.font = 'bold 18px ' + fontBase;
+      ctx.textAlign = 'center';
+      ctx.fillText(c.zh + ' (' + c.en + ')', cX + cW / 2, cY + 26);
+
+      ctx.fillStyle = '#FEF9C3';
+      ctx.strokeStyle = '#CA8A04';
+      ctx.lineWidth = 2;
+      ctx.fillRect(cX + 20, cY + 36, cW - 40, 42);
+      ctx.strokeRect(cX + 20, cY + 36, cW - 40, 42);
+
+      ctx.fillStyle = '#0F172A';
+      ctx.font = 'bold 22px ' + fontBase;
+      ctx.fillText('品德得分：' + c.sah.toFixed(2) + ' / 20', cX + cW / 2, cY + 65);
+
+      const rows = [
+        ['学术表现 (50%)：', c.acad.toFixed(2) + '%'],
+        ['联课表现 (30%)：', c.koku.toFixed(2) + '%'],
+        ['品德操守 (20%)：', c.sah.toFixed(2) + '%']
+      ];
+      ctx.font = '13.5px ' + fontBase;
+      rows.forEach((r, rIdx) => {
+        const ry = cY + 98 + rIdx * 20;
+        ctx.fillStyle = '#475569';
+        ctx.textAlign = 'left';
+        ctx.fillText(r[0], cX + 22, ry);
+        ctx.textAlign = 'right';
+        ctx.fillText(r[1], cX + cW - 22, ry);
+      });
+
+      ctx.strokeStyle = '#CBD5E1';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(cX + 20, cY + 150);
+      ctx.lineTo(cX + cW - 20, cY + 150);
+      ctx.stroke();
+
+      const total = (c.acad + c.koku + c.sah).toFixed(2) + '%';
+      ctx.fillStyle = '#1E3A8A';
+      ctx.font = 'bold 16px ' + fontBase;
+      ctx.textAlign = 'left';
+      ctx.fillText('综合总分 (100%)：', cX + 22, cY + 174);
+      ctx.textAlign = 'right';
+      ctx.fillText(total, cX + cW - 22, cY + 174);
+    });
+
+    ctx.fillStyle = '#0F172A';
+    ctx.font = 'bold 14.5px ' + fontBase;
+    ctx.textAlign = 'right';
+    ctx.fillText('评审老师：' + EVALUATOR_DISPLAY + '   ｜   日期：06/11/2026', M + TW - 16, y + boxH - 12);
+
+    return canvas;
+  }
+
+  function validateAndDownloadPDF() {
+    const c1 = document.getElementById('input-c1').value.trim();
+    const c2 = document.getElementById('input-c2').value.trim();
+    const c3 = document.getElementById('input-c3').value.trim();
+
+    const n1 = parseFloat(c1);
+    const n2 = parseFloat(c2);
+    const n3 = parseFloat(c3);
+
+    const invalidNames = [];
+    firstEmptyInputId = null;
+
+    if (c1 === '' || isNaN(n1) || n1 < 0 || n1 > 20) {
+      invalidNames.push('颜妤欣 (GAN YU XIN)');
+      document.getElementById('card-c1').classList.add('missing-error');
+      if (!firstEmptyInputId) firstEmptyInputId = 'input-c1';
+    }
+    if (c2 === '' || isNaN(n2) || n2 < 0 || n2 > 20) {
+      invalidNames.push('颜煌星 (GAN ONG SIN)');
+      document.getElementById('card-c2').classList.add('missing-error');
+      if (!firstEmptyInputId) firstEmptyInputId = 'input-c2';
+    }
+    if (c3 === '' || isNaN(n3) || n3 < 0 || n3 > 20) {
+      invalidNames.push('洪婕宁 (JENNY ANG)');
+      document.getElementById('card-c3').classList.add('missing-error');
+      if (!firstEmptyInputId) firstEmptyInputId = 'input-c3';
+    }
+
+    if (invalidNames.length > 0) {
+      document.getElementById('modal-msg').innerHTML =
+        '请填妥以下学生的【品德与操守】分数（范围：0 – 20 分）：<br><strong style="color:#DC2626; display:block; margin-top:8px;">' +
+        invalidNames.join('<br>') +
+        '</strong>';
+      document.getElementById('warning-modal').style.display = 'flex';
+      return;
+    }
+
+    const canvas = renderA4Canvas(n1, n2, n3);
+    const imgData = canvas.toDataURL('image/jpeg', 0.96);
+
+    if (window.jspdf && window.jspdf.jsPDF) {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+      pdf.save('2026模范生评估表_' + EVALUATOR_FILE_ID + '.pdf');
+    } else {
+      window.print();
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    try {
+      if (localStorage.getItem(EVALUATOR_FILE_ID + '_c1')) document.getElementById('input-c1').value = localStorage.getItem(EVALUATOR_FILE_ID + '_c1');
+      if (localStorage.getItem(EVALUATOR_FILE_ID + '_c2')) document.getElementById('input-c2').value = localStorage.getItem(EVALUATOR_FILE_ID + '_c2');
+      if (localStorage.getItem(EVALUATOR_FILE_ID + '_c3')) document.getElementById('input-c3').value = localStorage.getItem(EVALUATOR_FILE_ID + '_c3');
+      handleScoreInput();
+    } catch (e) {}
+  });
+</script>
+</body>
+</html>
